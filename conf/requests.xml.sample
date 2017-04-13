@@ -635,6 +635,94 @@
     ]]></sparql>
   </request>
 
+  <request>
+    <title><![CDATA[Show all triples of resources that are in <em>both</em>
+      the <code>.../thesaurus</code> and
+      <code>.../thesaurus/deprecated</code> named graphs.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    SELECT ?Named_Graph ?Resource_IRI ?Predicate ?Object
+    FROM NAMED #THESAURUS#
+    FROM NAMED #THESAURUS/deprecated#
+    WHERE {
+      GRAPH ?Named_Graph {
+        ?Resource_IRI ?Predicate ?Object .
+        FILTER EXISTS {
+          GRAPH #THESAURUS# {
+              ?Resource_IRI ?p2 ?o2 .
+          }
+          GRAPH #THESAURUS/deprecated# {
+              ?Resource_IRI ?p3 ?o3 .
+          }
+        }
+      }
+    }
+    ORDER BY ?Named_Graph ?Resource_IRI ?Predicate ?Object
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Show triples in the
+      <code>.../thesaurus/deprecated</code> named graph
+      that have a subject that is a resource in the
+      <code>.../thesaurus</code> named graph.
+      These are the triples that will be deleted from the
+      <code>.../thesaurus/deprecated</code> named graph
+      by the following Update.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    SELECT ?Resource_IRI ?Predicate ?Object
+    FROM NAMED #THESAURUS#
+    FROM NAMED #THESAURUS/deprecated#
+    WHERE {
+      GRAPH #THESAURUS/deprecated# {
+        ?Resource_IRI ?Predicate ?Object .
+        FILTER EXISTS {
+          GRAPH #THESAURUS# {
+              ?Resource_IRI ?p2 ?o2 .
+          }
+        }
+      }
+    }
+    ORDER BY ?Named_Graph ?Resource_IRI ?Predicate ?Object
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Remove triples from the
+      <code>.../thesaurus/deprecated</code> named graph
+      that have a subject that is a resource in the
+      <code>.../thesaurus</code> named graph.
+      <strong>WARNING:</strong> This may have unexpected results.
+      Please use the preceding Query
+      to see exactly which triples will be deleted.
+      ]]></title>
+    <type>Update</type>
+    <sparql><![CDATA[
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    DELETE {
+      GRAPH #THESAURUS/deprecated# {
+        ?Resource_IRI ?Predicate ?Object .
+      }
+    }
+    USING NAMED #THESAURUS#
+    USING NAMED #THESAURUS/deprecated#
+    WHERE {
+      GRAPH #THESAURUS/deprecated# {
+        ?Resource_IRI ?Predicate ?Object .
+        FILTER EXISTS {
+          GRAPH #THESAURUS# {
+              ?Resource_IRI ?p2 ?o2 .
+          }
+        }
+      }
+    }
+    ]]></sparql>
+  </request>
+
   <!-- Malformed IRIs -->
 
   <request>
@@ -756,7 +844,6 @@
     }
     ]]></sparql>
   </request>
-
   <request>
     <title><![CDATA[Show all triples in the
       <code>qualitySettings</code> named graph.]]></title>
@@ -769,7 +856,6 @@
     }
     ]]></sparql>
   </request>
-
   <request>
     <title><![CDATA[<b>ANDS use only during migration to PoolParty
       Release 5.5</b>:
@@ -786,8 +872,6 @@
     }
     ]]></sparql>
   </request>
-
-
   <request>
     <title><![CDATA[<b>ANDS use only during migration to PoolParty
       Release 5.5</b>:
