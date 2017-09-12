@@ -113,7 +113,8 @@ public final class PoolPartyToolkit {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(remoteUrl)
                 .path("sparql").path(uriSupplement);
-        LOGGER.debug("Running query: " + target.getUri());
+        LOGGER.debug("Running query: URI: " + target.getUri()
+            + "; SPARQL: " + query);
         HttpAuthenticationFeature feature =
                 HttpAuthenticationFeature.basic(loginBean.getUsername(),
                         loginBean.getPassword());
@@ -161,7 +162,8 @@ public final class PoolPartyToolkit {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(remoteUrl)
                 .path("api/projects").path(projectID).path("update");
-        LOGGER.debug("Running update: " + target.getUri());
+        LOGGER.debug("Running update: " + target.getUri()
+            + "; SPARQL: " + update);
         HttpAuthenticationFeature feature =
                 HttpAuthenticationFeature.basic(loginBean.getUsername(),
                         loginBean.getPassword());
@@ -209,7 +211,7 @@ public final class PoolPartyToolkit {
         PoolPartyRequest[] poolPartyRequests =
                 loginBean.getPoolPartyRequests();
         ArrayList<RequestResponse> allResults =
-                new ArrayList<RequestResponse>();
+                new ArrayList<>();
 
         for (int projectIndex = 0;
                 projectIndex < selectedPoolPartyProjects.length;
