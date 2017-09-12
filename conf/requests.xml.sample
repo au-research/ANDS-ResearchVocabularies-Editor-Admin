@@ -899,5 +899,146 @@
     ]]></sparql>
   </request>
 
+  <!-- Move deprecated concepts and their histories into "hidden"
+       named graphs, and back again. -->
+
+  <request>
+    <title><![CDATA[Show all triples in the
+      <code>.../thesaurus/deprecated</code> named graph, together with
+      the corresponding entries in the
+      <code>.../thesaurus/history</code> named graph, that will be
+      moved into "hidden" named graphs by the following
+      Update.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    SELECT ?g ?s ?p ?o
+    FROM NAMED #THESAURUS/deprecated#
+    FROM NAMED #THESAURUS/history#
+    WHERE {
+      {
+        GRAPH #THESAURUS/deprecated# {
+          ?s ?p ?o
+        }
+        BIND (#THESAURUS/deprecated# AS ?g)
+      }
+      UNION
+      {
+        GRAPH #THESAURUS/history# {
+          ?s ?p ?o .
+          ?s <http://purl.org/vocab/changeset/schema#subjectOfChange> ?s2
+          GRAPH #THESAURUS/deprecated# {
+            ?s2 ?p2 ?o2
+          }
+        }
+        BIND (#THESAURUS/history# AS ?g)
+      }
+    }
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Move all resources in the
+      <code>.../thesaurus/deprecated</code> named graph, together with
+      the corresponding entries in the
+      <code>.../thesaurus/history</code> named graph, into
+      "hidden" named graphs so that they will not be imported during
+      the RVA publication process. Use the preceding Query to see
+      which triples will be moved.]]></title>
+    <type>Update</type>
+    <sparql><![CDATA[
+    DELETE {
+      GRAPH #THESAURUS/history# {
+        ?s ?p ?o
+      }
+    }
+    INSERT {
+      GRAPH #THESAURUS/history/hidden# {
+        ?s ?p ?o
+      }
+    }
+    USING NAMED #THESAURUS/deprecated#
+    USING NAMED #THESAURUS/history#
+    WHERE {
+      GRAPH #THESAURUS/history# {
+        ?s ?p ?o .
+        ?s <http://purl.org/vocab/changeset/schema#subjectOfChange> ?s2
+        GRAPH #THESAURUS/deprecated# {
+          ?s2 ?p2 ?o2
+        }
+      }
+    }
+    ;
+    DELETE {
+      GRAPH #THESAURUS/deprecated# {
+        ?s ?p ?o
+      }
+    }
+    INSERT {
+      GRAPH #THESAURUS/deprecated/hidden# {
+        ?s ?p ?o
+      }
+    }
+    USING #THESAURUS/deprecated#
+    WHERE {
+      ?s ?p ?o
+    }
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Show all triples in the
+      <code>.../thesaurus/deprecated/hidden</code> and
+      <code>.../thesaurus/history/hidden</code> named graphs.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    SELECT ?g ?s ?p ?o
+    FROM NAMED #THESAURUS/deprecated/hidden#
+    FROM NAMED #THESAURUS/history/hidden#
+    WHERE {
+      GRAPH ?g {
+        ?s ?p ?o
+      }
+    }
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Move all triples in the
+      <code>.../thesaurus/deprecated/hidden</code> named graph
+      back into the <code>.../thesaurus/deprecated</code> named graph,
+      and all triples in the
+      <code>.../thesaurus/history/hidden</code> named graph
+      back into the <code>.../thesaurus/history</code> named
+      graph.]]></title>
+    <type>Update</type>
+    <sparql><![CDATA[
+    DELETE {
+      GRAPH #THESAURUS/history/hidden# {
+        ?s ?p ?o
+      }
+    }
+    INSERT {
+      GRAPH #THESAURUS/history# {
+        ?s ?p ?o
+      }
+    }
+    USING #THESAURUS/history/hidden#
+    WHERE {
+      ?s ?p ?o
+    }
+    ;
+    DELETE {
+      GRAPH #THESAURUS/deprecated/hidden# {
+        ?s ?p ?o
+      }
+    }
+    INSERT {
+      GRAPH #THESAURUS/deprecated# {
+        ?s ?p ?o
+      }
+    }
+    USING #THESAURUS/deprecated/hidden#
+    WHERE {
+      ?s ?p ?o
+    }
+    ]]></sparql>
+  </request>
 
 </requests>
