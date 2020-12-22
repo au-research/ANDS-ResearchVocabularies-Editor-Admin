@@ -1044,4 +1044,76 @@
     ]]></sparql>
   </request>
 
+  <!-- Leading and trailing whitespace in literals -->
+
+  <request>
+    <title><![CDATA[Show triples in which the object is a literal that
+      has either leading or trailing whitespace (LIMIT 50).  Both the
+      <code>.../thesaurus</code> and
+      <code>.../thesaurus/deprecated</code> named graphs are
+      queried.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    SELECT ?Named_Graph ?s ?p ?o
+    FROM NAMED #THESAURUS#
+    FROM NAMED #THESAURUS/deprecated# {
+      GRAPH ?Named_Graph {
+        ?s ?p ?o
+        FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+      }
+    }
+    LIMIT 50
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Show triples in which the object is a literal that
+      has either leading or trailing whitespace (no LIMIT).  Both the
+      <code>.../thesaurus</code> and
+      <code>.../thesaurus/deprecated</code> named graphs are
+      queried.]]></title>
+    <type>Query</type>
+    <sparql><![CDATA[
+    SELECT ?Named_Graph ?s ?p ?o
+    FROM NAMED #THESAURUS#
+    FROM NAMED #THESAURUS/deprecated# {
+      GRAPH ?Named_Graph {
+        ?s ?p ?o
+        FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+      }
+    }
+    ]]></sparql>
+  </request>
+  <request>
+    <title><![CDATA[Remove leading and trailing whitespace from
+      literal objects.  Both the <code>.../thesaurus</code> and
+      <code>.../thesaurus/deprecated</code> named graphs are
+      updated.]]></title>
+    <type>Update</type>
+    <sparql><![CDATA[
+    WITH #THESAURUS#
+    DELETE {
+      ?s ?p ?o
+    }
+    INSERT {
+      ?s ?p REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "")
+    }
+    WHERE {
+      ?s ?p ?o
+      FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+    }
+    ;
+    WITH #THESAURUS/deprecated#
+    DELETE {
+      ?s ?p ?o
+    }
+    INSERT {
+      ?s ?p REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "")
+    }
+    WHERE {
+      ?s ?p ?o
+      FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+    }
+    ]]></sparql>
+  </request>
+
 </requests>
