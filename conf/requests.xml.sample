@@ -746,7 +746,8 @@
   <!-- Empty labels -->
 
   <request>
-    <title><![CDATA[Show empty labels (prefLabels, altLabels, hiddenLabels)
+    <title><![CDATA[Show empty labels (rdfs:label, dc:title,
+      dcterms:title, skos:prefLabel, skos:altLabel, skos:hiddenLabel)
       (LIMIT 50).
       (Empty labels can not be edited or deleted in PoolParty.)]]></title>
     <type>Query</type>
@@ -770,7 +771,8 @@
   </request>
 
   <request>
-    <title><![CDATA[Show empty labels (prefLabels, altLabels, hiddenLabels)
+    <title><![CDATA[Show empty labels (rdfs:label, dc:title,
+      dcterms:title, skos:prefLabel, skos:altLabel, skos:hiddenLabel)
       (no LIMIT).
       (Empty labels can not be edited or deleted in PoolParty.)]]></title>
     <type>Query</type>
@@ -793,7 +795,8 @@
   </request>
 
   <request>
-    <title><![CDATA[Remove empty labels (prefLabels, altLabels, hiddenLabels).
+    <title><![CDATA[Remove empty labels (rdfs:label, dc:title,
+      dcterms:title, skos:prefLabel, skos:altLabel, skos:hiddenLabel).
       (Empty labels can not be edited or deleted in PoolParty.)
       <strong>WARNING:</strong> the result is unknown if a prefLabel is
       deleted.
