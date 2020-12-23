@@ -1095,11 +1095,12 @@
       ?s ?p ?o
     }
     INSERT {
-      ?s ?p REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "")
+      ?s ?p ?o2
     }
     WHERE {
       ?s ?p ?o
       FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+      BIND (REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "") AS ?o2)
     }
     ;
     WITH #THESAURUS/deprecated#
@@ -1107,11 +1108,12 @@
       ?s ?p ?o
     }
     INSERT {
-      ?s ?p REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "")
+      ?s ?p ?o2
     }
     WHERE {
       ?s ?p ?o
       FILTER (isLiteral(?o) && REGEX(STR(?o),"(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)"))
+      BIND (REPLACE(?o, "(^(\\p{Z}|\\p{Cc}))|((\\p{Z}|\\p{Cc})$)", "") AS ?o2)
     }
     ]]></sparql>
   </request>
